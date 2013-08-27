@@ -1,11 +1,13 @@
+require 'colorize'
+
 class Board
 
   def initialize
     #
   end
 
-  def render_board
-    #
+  def display
+    puts "board".colorize :red
   end
 
   def checkmate?
