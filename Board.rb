@@ -12,7 +12,11 @@ class Board
       print 8 - index, " "
       row.each do |square|
         print '|'
-        print "_" if square.nil?
+        if square.nil?
+          print "_"
+        else
+          print square
+        end
       end
       puts "| #{8 - index}"
     end
@@ -24,11 +28,11 @@ class Board
   end
 
   def [](x, y)
-    board[x][y]
+    @board[x][y]
   end
 
   def []=(x, y, value)
-    board[x][y] = value
+    @board[x][y] = value
   end
 
   def empty_board
