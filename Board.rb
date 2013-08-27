@@ -27,6 +27,10 @@ class Board
   def checkmate?
     #
   end
+  
+  def set_square_contents(coord, value)
+    @board[coord[0]][coord[1]] = value
+  end
 
   def [](x, y)
     @board[x][y]

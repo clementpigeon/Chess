@@ -9,8 +9,8 @@ class Chess
     b = Board.new
 
     # player 1 is blue, down
-    player1 = Player.new(@board, :blue)
-    player2 = Player.new(@board, :red)
+    player1 = Player.new(b, :blue)
+    player2 = Player.new(b, :red)
 
     b.reset_pieces(player1, player2)
 
@@ -18,6 +18,7 @@ class Chess
     # king = Piece.new(b, :king, player2, nil)
     # b[0, 0] = p
     # b[0, 1] = king
+    player1.take_turn
     b.display
 
   end

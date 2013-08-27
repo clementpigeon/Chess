@@ -20,7 +20,7 @@ class Piece
   end
 
   def valid_move?(destination)
-
+    true
   end
 
   def to_s
