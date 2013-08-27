@@ -27,10 +27,10 @@ class Board
   end
 
   def reset_bishops(player1, player2)
-    self[7, 1] = Piece.new(self, :bishop, player1, [7, 1])
-    self[7, 6] = Piece.new(self, :bishop, player1, [7, 6])
-    self[0, 1] = Piece.new(self, :bishop, player2, [0, 1])
-    self[0, 6] = Piece.new(self, :bishop, player2, [0, 6])
+    self[7, 1] = Bishop.new(self, :bishop, player1, [7, 1])
+    self[7, 6] = Bishop.new(self, :bishop, player1, [7, 6])
+    self[0, 1] = Bishop.new(self, :bishop, player2, [0, 1])
+    self[0, 6] = Bishop.new(self, :bishop, player2, [0, 6])
   end
 
   def reset_knights(player1, player2)

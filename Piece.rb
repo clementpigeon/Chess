@@ -78,7 +78,16 @@ class Knight < Piece
 end
 
 class Bishop < Piece
+  def possible_destinations
+    result = []
 
+    (0..7).to_a.each_index do |i|
+      result << [(location[0] + i) % 8, (@location[1] + i) % 8]
+      result << [(location[0] + i) % 8, (@location[1] - i) % 8]
+    end
+
+    result.reject { |destination| destination == @location }
+  end
 end
 
 class Queen < Piece
