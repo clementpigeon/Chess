@@ -11,11 +11,11 @@ class Board
 
   def reset_pawns(player1, player2)
     (0..7).to_a.each do |i|
-      self[6, i] = Piece.new(self, :pawn, player1, [6, i])
+      self[6, i] = Pawn.new(self, :pawn, player1, [6, i])
     end
 
     (0..7).to_a.each do |i|
-      self[1, i] = Piece.new(self, :pawn, player2, [1, i])
+      self[1, i] = Pawn.new(self, :pawn, player2, [1, i])
     end
   end
 
@@ -41,8 +41,8 @@ class Board
   end
 
   def reset_queens(player1, player2)
-    self[7, 3] = Piece.new(self, :queen, player1, [7, 3])
-    self[0, 3] = Piece.new(self, :queen, player2, [0, 3])
+    self[7, 3] = Queen.new(self, :queen, player1, [7, 3])
+    self[0, 3] = Queen.new(self, :queen, player2, [0, 3])
   end
 
   def reset_kings(player1, player2)
