@@ -17,17 +17,19 @@ class Player
     destination = move[1]
 
     if moved_piece.valid_move? destination
-
-      @board.set_square_contents(moved_piece.location, nil)
-
-      moved_piece.location = destination
-
-      @board.set_square_contents(destination, moved_piece)
-
+      make_move(moved_piece, destination
     else
       puts "try again"
       take_turn
     end
+  end
+
+  def make_move(moved_piece, destination)
+    @board.set_square_contents(moved_piece.location, nil)
+
+    moved_piece.location = destination
+
+    @board.set_square_contents(destination, moved_piece)
   end
 
   def illegal
