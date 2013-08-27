@@ -12,12 +12,23 @@ class Chess
     player1 = Player.new(b, :blue)
     player2 = Player.new(b, :red)
 
+    current_player = player1
+
     b.reset_pieces(player1, player2)
 
     until b.checkmate?
-      player1.take_turn
+      current_player.take_turn
+      p "Is there a check on red? #{b.king(b.pieces_on_board[:red]).in_check?}"
+      p "Is there a check on blue? #{b.king(b.pieces_on_board[:blue]).in_check?}"
+      current_player = swap_current_player(current_player, player1, player2)
+
     end
 
+  end
+
+  def swap_current_player(current_player, player1, player2)
+    return player1 if current_player == player2
+    player2
   end
 
 

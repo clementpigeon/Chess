@@ -19,8 +19,13 @@ class Board
       end
     end
 
-    {blue: blue_pieces, red: red_pieces}
+    result = {blue: blue_pieces, red: red_pieces}
+    result
+  end
 
+  def king(pieces)
+    result = pieces.select { |piece| piece.class.to_s == "King" }
+    result[0]
   end
 
   def display

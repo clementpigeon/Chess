@@ -57,11 +57,25 @@ class Pawn < Piece
       diagonals = diagonals[2..3]
     end
 
+    if @owner.color == :blue && @location[0] == 6  # player 1 pawn only goes up
+      next_square = @board.get_square_contents([@location[0] - 2, @location[1]])
+      result << [@location[0] - 2, @location[1]] if next_square.nil?
+      diagonals = diagonals[0..1]
+    elsif @location[0] == 1 # player 2 pawn only goes down
+      next_square = @board.get_square_contents([@location[0] + 2, @location[1]])
+      result << [@location[0] + 2, @location[1]] if next_square.nil?
+      diagonals = diagonals[2..3]
+    end
+
+
+
     diagonals.select! do |destination|
       destination_contents = @board.get_square_contents(destination)
 
       destination_contents && destination_contents.owner != @owner
     end
+
+
 
     result += diagonals
 
@@ -106,8 +120,10 @@ class Bishop < Piece
     result = []
 
     (0..7).to_a.each_index do |i|
-      result << [(location[0] + i) % 8, (@location[1] + i) % 8]
-      result << [(location[0] + i) % 8, (@location[1] - i) % 8]
+      result << [(@location[0] + i), (@location[1] + i)]
+      result << [(@location[0] + i), (@location[1] - i)]
+      result << [(@location[0] - i), (@location[1] - i)]
+      result << [(@location[0] - i), (@location[1] + i)]
     end
 
     result.reject { |destination| destination == @location }
@@ -119,8 +135,11 @@ class Queen < Piece
     result = []
 
     (0..7).to_a.each_index do |i|
-      result << [(location[0] + i) % 8, (@location[1] + i) % 8]
-      result << [(location[0] + i) % 8, (@location[1] - i) % 8]
+      result << [(@location[0] + i), (@location[1] + i)]
+      result << [(@location[0] + i), (@location[1] - i)]
+      result << [(@location[0] - i), (@location[1] - i)]
+      result << [(@location[0] - i), (@location[1] + i)]
+
       result << [i, @location[1]]
       result << [@location[0], i]
     end
@@ -150,6 +169,29 @@ class King < Piece
   end
 
   def in_check?
+    opponent_pieces = @board.pieces_on_board[other_color]
+   # puts "checking these pieces: #{opponent_pieces}"
+    in_check = opponent_pieces.any? do |piece|
 
+      threatens_me? piece
+    end
+    p "in check" if in_check
+    in_check
   end
+
+  def other_color
+    if @owner.color == :red
+      return :blue
+    else
+      return :red
+    end
+  end
+
+  def threatens_me?(piece)
+    if piece.possible_destinations.include? @location
+      p "threatened by #{piece.class.to_s} of color #{piece.owner.color.to_s}"
+      true
+    end
+  end
+
 end

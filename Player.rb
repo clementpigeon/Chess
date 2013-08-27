@@ -6,7 +6,7 @@ class Player
   end
 
   def get_user_input
-    print "Enter move: "
+    print "Enter move: ".colorize (@color)
     input = gets.chomp
   end
 
