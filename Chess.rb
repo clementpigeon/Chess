@@ -8,6 +8,7 @@ class Chess
   def run
     b = Board.new
 
+    # player 1 is blue, down
     player1 = Player.new(@board, :blue)
     player2 = Player.new(@board, :red)
 
