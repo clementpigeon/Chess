@@ -10,18 +10,12 @@ class Player
     input = gets.chomp
   end
 
-  # f2, f3
-  # e7, e5
-  # g2, g4
-  # d8, h4
-
   def parse_input(input)
-    # returns [piece, destination]
-    locations = input.split(', ')
+    locations = input.split(' ')
     origin = parse_coordinate(locations[0])
     destination = parse_coordinate(locations[1])
     [@board.get_square_contents(origin), destination]
-    #return [@board[1, 5], [2, 5]]
+    #return [piece, destination]
   end
 
   def parse_coordinate(string)
@@ -37,12 +31,14 @@ class Player
 
     moved_piece = move[0]
     destination = move[1]
-
-    if moved_piece.valid_move? destination
-      make_move(moved_piece, destination)
-    else
-      puts "try again"
+    if moved_piece.owner != self
+      puts "Can't move opponent piece. Try again"
       take_turn
+    elsif not moved_piece.valid_move?(destination)
+      puts "Invalid move. Try again"
+      take_turn
+    else
+      make_move(moved_piece, destination)
     end
   end
 
@@ -52,9 +48,6 @@ class Player
     moved_piece.location = destination
 
     @board.set_square_contents(destination, moved_piece)
-  end
-
-  def illegal
   end
 
 

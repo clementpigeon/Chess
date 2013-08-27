@@ -20,13 +20,20 @@ class Piece
   end
 
   def valid_move?(destination)
+    return false if destination_same_owner? destination
     true
+
+    #check if destination is within piece's viable move set
+  end
+
+  def destination_same_owner?(destination)
+    destination_square = @board.get_square_contents(destination)
+    destination_square && destination_square.owner == self.owner
   end
 
   def to_s
     PIECES_DISPLAY[self.type].colorize owner.color
   end
-
 
 
 end
