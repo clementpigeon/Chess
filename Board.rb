@@ -6,6 +6,23 @@ class Board
     @board = empty_board
   end
 
+  def pieces_on_board
+    #returns a hash {red: [red pieces], blue: [blue pieces]}
+    blue_pieces = []
+    red_pieces = []
+    @board.each do |row|
+      row.each do |square|
+        unless square.nil?
+          blue_pieces << square if square.owner.color == :blue
+          red_pieces << square if square.owner.color == :red
+        end
+      end
+    end
+
+    {blue: blue_pieces, red: red_pieces}
+
+  end
+
   def display
     #puts "board".colorize :red
     puts "   " + ('a'..'h').to_a.join(' ')

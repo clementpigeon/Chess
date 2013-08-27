@@ -19,10 +19,7 @@ class Piece
   def valid_move?(destination)
     return false if destination_same_owner? destination
     return false unless possible_destinations.include? destination
-
     true
-
-    #check if destination is within piece's viable move set
   end
 
   def destination_same_owner?(destination)
@@ -150,5 +147,9 @@ class King < Piece
     moves.map do |move|
       [move[0] + @location[0], move[1] + @location[1]]
     end
+  end
+
+  def in_check?
+
   end
 end
