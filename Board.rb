@@ -3,7 +3,7 @@ require './board_reset_methods.rb'
 class Board
 
   def initialize
-    @board = self.empty_board
+    @board = empty_board
   end
 
   def display

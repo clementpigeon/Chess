@@ -20,10 +20,10 @@ class Board
   end
 
   def reset_rooks(player1, player2)
-    self[7, 0] = Piece.new(self, :rook, player1, [7, 0])
-    self[7, 7] = Piece.new(self, :rook, player1, [7, 7])
-    self[0, 0] = Piece.new(self, :rook, player2, [0, 0])
-    self[0, 7] = Piece.new(self, :rook, player2, [0, 7])
+    self[7, 0] = Rook.new(self, :rook, player1, [7, 0])
+    self[7, 7] = Rook.new(self, :rook, player1, [7, 7])
+    self[0, 0] = Rook.new(self, :rook, player2, [0, 0])
+    self[0, 7] = Rook.new(self, :rook, player2, [0, 7])
   end
 
   def reset_bishops(player1, player2)
@@ -34,10 +34,10 @@ class Board
   end
 
   def reset_knights(player1, player2)
-    self[7, 2] = Piece.new(self, :knight, player1, [7, 2])
-    self[7, 5] = Piece.new(self, :knight, player1, [7, 5])
-    self[0, 2] = Piece.new(self, :knight, player2, [0, 2])
-    self[0, 5] = Piece.new(self, :knight, player2, [0, 5])
+    self[7, 2] = Knight.new(self, :knight, player1, [7, 2])
+    self[7, 5] = Knight.new(self, :knight, player1, [7, 5])
+    self[0, 2] = Knight.new(self, :knight, player2, [0, 2])
+    self[0, 5] = Knight.new(self, :knight, player2, [0, 5])
   end
 
   def reset_queens(player1, player2)
