@@ -31,6 +31,69 @@ class Piece
     PIECES_DISPLAY[self.class.to_s].colorize owner.color
   end
 
+  def collisions?(destination)
+    if diagonal?(destination)
+
+    else #not diagonal destination
+
+    end
+  end
+
+  def diagonal?(destination)
+    !(destination[0] == @location[0] || destination[1] == @location[1])
+  end
+
+
+  def diagonal_destinations
+    result = []
+
+    (0..7).to_a.each_index do |i|
+      result << [i, @location[1]]
+      result << [@location[0], i]
+    end
+
+    i = 0
+    free = true
+    current_location = self.location
+    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
+      current_location[0] += 1
+      current_location[0] += 1
+      result << [@location[0], i]
+      free = false if get_square_contents(current_location)
+    end
+
+    i = 0
+    free = true
+    current_location = self.location
+    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
+      current_location[0] += 1
+      current_location[0] -= 1
+      result << [@location[0], i]
+      free = false if get_square_contents(current_location)
+    end
+
+    i = 0
+    free = true
+    current_location = self.location
+    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
+      current_location[0] -= 1
+      current_location[0] += 1
+      result << [@location[0], i]
+      free = false if get_square_contents(current_location)
+    end
+
+    i = 0
+    free = true
+    current_location = self.location
+    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
+      current_location[0] -= 1
+      current_location[0] -= 1
+      result << [@location[0], i]
+      free = false if get_square_contents(current_location)
+    end
+  end
+
+
 end
 
 class Pawn < Piece
@@ -76,7 +139,6 @@ class Pawn < Piece
     end
 
 
-
     result += diagonals
 
   end
@@ -117,16 +179,17 @@ end
 
 class Bishop < Piece
   def possible_destinations
-    result = []
-
-    (0..7).to_a.each_index do |i|
-      result << [(@location[0] + i), (@location[1] + i)]
-      result << [(@location[0] + i), (@location[1] - i)]
-      result << [(@location[0] - i), (@location[1] - i)]
-      result << [(@location[0] - i), (@location[1] + i)]
-    end
-
-    result.reject { |destination| destination == @location }
+    # result = []
+    #
+    # (0..7).to_a.each_index do |i|
+    #   result << [(@location[0] + i), (@location[1] + i)]
+    #   result << [(@location[0] + i), (@location[1] - i)]
+    #   result << [(@location[0] - i), (@location[1] - i)]
+    #   result << [(@location[0] - i), (@location[1] + i)]
+    # end
+    #
+    # result.reject { |destination| destination == @location }
+    diagonal_destinations
   end
 end
 
@@ -195,3 +258,5 @@ class King < Piece
   end
 
 end
+
+# b
