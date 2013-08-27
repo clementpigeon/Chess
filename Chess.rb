@@ -14,12 +14,9 @@ class Chess
 
     b.reset_pieces(player1, player2)
 
-    # p = Piece.new(b, :pawn, player1, nil)
-    # king = Piece.new(b, :king, player2, nil)
-    # b[0, 0] = p
-    # b[0, 1] = king
-    player1.take_turn
-    b.display
+    until b.checkmate?
+      player1.take_turn
+    end
 
   end
 

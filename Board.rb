@@ -25,11 +25,15 @@ class Board
   end
 
   def checkmate?
-    #
+    false
   end
-  
+
   def set_square_contents(coord, value)
     @board[coord[0]][coord[1]] = value
+  end
+
+  def get_square_contents(coord)
+    @board[coord[0]][coord[1]]
   end
 
   def [](x, y)
