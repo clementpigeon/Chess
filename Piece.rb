@@ -1,18 +1,18 @@
 class Piece
 
   PIECES_DISPLAY = {
-    pawn: "P",
-    rook: 'R',
-    knight: 'K',
-    bishop: 'B',
-    king: '*',
-    queen: 'Q'
+    'Pawn' => "P",
+    'Rook' => 'R',
+    'Knight' => 'K',
+    'Bishop' => 'B',
+    'King' => '*',
+    'Queen' => 'Q'
   }
 
-  attr_accessor :board, :type, :owner, :location
+  attr_accessor :board, :owner, :location
 
-  def initialize (board, type, owner, location)
-    @board, @type, @owner, @location = board, type, owner, location
+  def initialize (board, owner, location)
+    @board, @owner, @location = board, owner, location
   end
 
 
@@ -31,14 +31,9 @@ class Piece
   end
 
   def to_s
-    PIECES_DISPLAY[self.type].colorize owner.color
+    PIECES_DISPLAY[self.class.to_s].colorize owner.color
   end
 
-  def possible_destinations
-    []
-
-
-  end
 end
 
 class Pawn < Piece
