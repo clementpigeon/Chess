@@ -16,6 +16,7 @@ class Piece
   end
 
   def valid_move?(destination)
+    return false unless destination.all? { |coord| coord.between?(0,7) }
     return false if destination_same_owner? destination
     return false unless possible_destinations.include? destination
     true
@@ -176,12 +177,10 @@ class King < Piece
 
   def in_check?
     opponent_pieces = @board.pieces.select { |piece| piece.owner.color == other_color }
-   # puts "checking these pieces: #{opponent_pieces}"
     in_check = opponent_pieces.any? do |piece|
-
       threatens_me? piece
     end
-    p "in check" if in_check
+    p "Check!" if in_check
     in_check
   end
 
@@ -195,11 +194,9 @@ class King < Piece
 
   def threatens_me?(piece)
     if piece.possible_destinations.include? @location
-      p "threatened by #{piece.class.to_s} of color #{piece.owner.color.to_s}"
+ #     p "threatened by #{piece.class.to_s} of color #{piece.owner.color.to_s}"
       true
     end
   end
 
 end
-
-# b
