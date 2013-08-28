@@ -36,50 +36,50 @@ class Board
   end
 
   def reset_bishops(player1, player2)
-    new_pawn = Bishop.new(self, player1, [7, 2])
-    self[7, 2] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Bishop.new(self, player1, [7, 5])
-    self[7, 5] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Bishop.new(self, player2, [0, 2])
-    self[0, 2] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Bishop.new(self, player2, [0, 5])
-    self[0, 5] = new_pawn
-    @pieces << new_pawn
+    [player1, player2].each_with_index do |player, index|
+      2.times do |i|
+        row = index == 0 ? 7 : 0
+        col = i == 0 ? 2 : 5
+
+        new_bishop = Bishop.new(self, player, [row, col])
+        self[row, col] = new_bishop
+        @pieces << new_bishop
+      end
+    end
   end
 
   def reset_knights(player1, player2)
-    new_pawn = Knight.new(self, player1, [7, 1])
-    self[7, 1] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Knight.new(self, player1, [7, 6])
-    self[7, 6] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Knight.new(self, player2, [0, 1])
-    self[0, 1] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Knight.new(self, player2, [0, 6])
-    self[0, 6] = new_pawn
-    @pieces << new_pawn
+    [player1, player2].each_with_index do |player, index|
+      2.times do |i|
+        row = index == 0 ? 7 : 0
+        col = i == 0 ? 1 : 6
+
+        new_knight = Knight.new(self, player, [row, col])
+        self[row, col] = new_knight
+        @pieces << new_knight
+      end
+    end
   end
 
   def reset_queens(player1, player2)
-    new_pawn = Queen.new(self, player1, [7, 3])
-    self[7, 3] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Queen.new(self, player2, [0, 3])
-    self[0, 3] = new_pawn
-    @pieces << new_pawn
+    [player1, player2].each_with_index do |player, index|
+      row = index == 0 ? 7 : 0
+      col = 3
+
+      new_queen = Queen.new(self, player, [row, col])
+      self[row, col] = new_queen
+      @pieces << new_queen
+    end
   end
 
   def reset_kings(player1, player2)
-    new_pawn = King.new(self, player1, [7, 4])
-    self[7, 4] = new_pawn
-    @pieces << new_pawn
-    new_pawn = King.new(self, player2, [0, 4])
-    self[0, 4] = new_pawn
-    @pieces << new_pawn
+    [player1, player2].each_with_index do |player, index|
+      row = index == 0 ? 7 : 0
+      col = 4
+
+      new_king = King.new(self, player, [row, col])
+      self[row, col] = new_king
+      @pieces << new_king
+    end
   end
 end
