@@ -15,7 +15,6 @@ class Piece
     @board, @owner, @location = board, owner, location
   end
 
-
   def valid_move?(destination)
     return false if destination_same_owner? destination
     return false unless possible_destinations.include? destination
@@ -31,68 +30,46 @@ class Piece
     PIECES_DISPLAY[self.class.to_s].colorize owner.color
   end
 
-  def collisions?(destination)
-    if diagonal?(destination)
+  def iterate_destinations(directions)
+    result = []
+    directions.each do |direction|
+      i = 0
+      free = true
+      current_location = self.location.dup
 
-    else #not diagonal destination
-
+      while free == true
+        current_location[0] += direction[0]
+        current_location[1] += direction[1]
+        if !current_location.all? { |coord| coord.between?(0,7) }
+          free = false
+        else
+          result << [current_location[0], current_location[1]]
+          free = false if @board.get_square_contents(current_location)
+        end
+      end
     end
+    result
   end
-
-  def diagonal?(destination)
-    !(destination[0] == @location[0] || destination[1] == @location[1])
-  end
-
 
   def diagonal_destinations
-    result = []
-
-    (0..7).to_a.each_index do |i|
-      result << [i, @location[1]]
-      result << [@location[0], i]
-    end
-
-    i = 0
-    free = true
-    current_location = self.location
-    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
-      current_location[0] += 1
-      current_location[0] += 1
-      result << [@location[0], i]
-      free = false if get_square_contents(current_location)
-    end
-
-    i = 0
-    free = true
-    current_location = self.location
-    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
-      current_location[0] += 1
-      current_location[0] -= 1
-      result << [@location[0], i]
-      free = false if get_square_contents(current_location)
-    end
-
-    i = 0
-    free = true
-    current_location = self.location
-    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
-      current_location[0] -= 1
-      current_location[0] += 1
-      result << [@location[0], i]
-      free = false if get_square_contents(current_location)
-    end
-
-    i = 0
-    free = true
-    current_location = self.location
-    while current_location.all? {|coord| coord < 8 } && current_location.all? {|coord| coord < 8 } && free == true
-      current_location[0] -= 1
-      current_location[0] -= 1
-      result << [@location[0], i]
-      free = false if get_square_contents(current_location)
-    end
+    directions = [
+      [-1, -1],
+      [-1, 1],
+      [1, -1],
+      [1, 1]
+    ]
+    iterate_destinations(directions)
   end
 
+  def vertical_destinations
+    directions = [
+      [-1, 0],
+      [1, 0],
+      [0, -1],
+      [0, 1]
+    ]
+    iterate_destinations(directions)
+  end
 
 end
 
@@ -103,7 +80,7 @@ class Pawn < Piece
       [-1, -1],
       [-1, 1],
       [1, -1],
-      [1, 1],
+      [1, 1]
     ]
 
     diagonals.map! do |move|
@@ -130,14 +107,11 @@ class Pawn < Piece
       diagonals = diagonals[2..3]
     end
 
-
-
     diagonals.select! do |destination|
       destination_contents = @board.get_square_contents(destination)
 
       destination_contents && destination_contents.owner != @owner
     end
-
 
     result += diagonals
 
@@ -147,14 +121,7 @@ end
 
 class Rook < Piece
   def possible_destinations
-    result = []
-
-    (0..7).to_a.each_index do |i|
-      result << [i, @location[1]]
-      result << [@location[0], i]
-    end
-
-    result.reject { |destination| destination == @location }
+    vertical_destinations
   end
 end
 
@@ -179,39 +146,15 @@ end
 
 class Bishop < Piece
   def possible_destinations
-    # result = []
-    #
-    # (0..7).to_a.each_index do |i|
-    #   result << [(@location[0] + i), (@location[1] + i)]
-    #   result << [(@location[0] + i), (@location[1] - i)]
-    #   result << [(@location[0] - i), (@location[1] - i)]
-    #   result << [(@location[0] - i), (@location[1] + i)]
-    # end
-    #
-    # result.reject { |destination| destination == @location }
     diagonal_destinations
   end
 end
 
 class Queen < Piece
   def possible_destinations
-    result = []
-
-    (0..7).to_a.each_index do |i|
-      result << [(@location[0] + i), (@location[1] + i)]
-      result << [(@location[0] + i), (@location[1] - i)]
-      result << [(@location[0] - i), (@location[1] - i)]
-      result << [(@location[0] - i), (@location[1] + i)]
-
-      result << [i, @location[1]]
-      result << [@location[0], i]
-    end
-
-    result.reject { |destination| destination == @location }
+    vertical_destinations + diagonal_destinations
   end
 end
-
-
 
 class King < Piece
   def possible_destinations
