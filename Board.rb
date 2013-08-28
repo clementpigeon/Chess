@@ -47,9 +47,7 @@ class Board
 
     own_pieces.each do |piece|
       rescues = rescues(king, piece)
-    #  p "piece of type #{piece.class.to_s} saves by moving to #{rescues}"
       return true unless rescues.empty?
-
     end
 
     false

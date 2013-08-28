@@ -8,7 +8,7 @@ class Chess
   def run
     b = Board.new
 
-    # player 1 is blue, down
+    # player 1 is blue, down, and starting
     player1 = Player.new(b, :blue)
     player2 = Player.new(b, :red)
 
@@ -19,8 +19,6 @@ class Chess
 
     until checkmate
       current_player.take_turn
-      # p "Is there a check on blue? #{player1.in_check?}"
-      # p "Is there a check on red? #{player2.in_check?}"
       current_player = swap_current_player(current_player, player1, player2)
       checkmate = b.checkmate?(player1, player2)
       puts "check" if current_player.in_check? && !checkmate
@@ -34,11 +32,6 @@ class Chess
     return player1 if current_player == player2
     player2
   end
-
-  # def checkmate?(player1, player2)
-  #   player1.board.checkmate?(player1, player2)
-  #
-  # end
 
 end
 
