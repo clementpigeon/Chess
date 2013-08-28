@@ -19,7 +19,28 @@ class Piece
     return false unless destination.all? { |coord| coord.between?(0,7) }
     return false if destination_same_owner? destination
     return false unless possible_destinations.include? destination
+    return false if moving_into_check? destination
     true
+  end
+
+  def moving_into_check?(destination)
+    original_location = @location
+
+    if @board[destination[0], destination[1]]
+      destination_content = @board[destination[0], destination[1]].dup
+    end
+
+    @owner.make_move(self, destination)
+
+    result = @owner.king.in_check?
+
+    @owner.make_move(self, original_location)
+
+    if @board[destination[0], destination[1]]
+      @board[destination[0], destination[1]] = destination_content
+    end
+
+    result
   end
 
   def destination_same_owner?(destination)
@@ -184,8 +205,6 @@ class King < Piece
     in_check = opponent_pieces.any? do |piece|
       threatens_me? piece
     end
-    p "Check!" if in_check
-    in_check
   end
 
   def other_color

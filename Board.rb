@@ -42,32 +42,18 @@ class Board
     false
   end
 
-  # def escapes(king)
-  #   escapes = king.possible_destinations
-  #   escapes.select! do |escape|
-  #     king.valid_move? escape
-  #   end
-  #
-  #   escapes.reject! do |escape|
-  #     original_location = king.location
-  #
-  #     if @board[escape[0]][escape[1]]
-  #       escape_content = @board[escape[0]][escape[1]].dup
-  #     end
-  #
-  #     king.owner.make_move(king, escape)
-  #     result = king.in_check?
-  #
-  #     king.owner.make_move(king, original_location)
-  #
-  #     if @board[escape[0]][escape[1]]
-  #       @board[escape[0]][escape[1]] = escape_content
-  #     end
-  #
-  #     result
-  #   end
-  #   escapes
-  # end
+  def rescueable?(king)
+    own_pieces = @pieces.select { |piece| king.owner == piece.owner }
+
+    own_pieces.each do |piece|
+      rescues = rescues(king, piece)
+    #  p "piece of type #{piece.class.to_s} saves by moving to #{rescues}"
+      return true unless rescues.empty?
+
+    end
+
+    false
+  end
 
   def rescues(king, piece)
     rescues = piece.possible_destinations
@@ -87,8 +73,9 @@ class Board
 
       piece.owner.make_move(piece, original_location)
 
-      if @board[rescue_move[0]][rescue_move[1]]
-        @board[rescue_move[0]][rescue_move[1]] = rescue_content
+
+      if self[rescue_move[0], rescue_move[1]]
+        self[rescue_move[0], rescue_move[1]] = rescue_content
       end
 
       result
@@ -97,18 +84,6 @@ class Board
     rescues
   end
 
-  def rescueable?(king)
-    own_pieces = @pieces.select { |piece| king.owner == piece.owner }
-
-    own_pieces.each do |piece|
-      rescues = rescues(king, piece)
-    #  p "piece of type #{piece.class.to_s} saves by moving to #{rescues}"
-      return true unless rescues.empty?
-
-    end
-
-    false
-  end
 
   def set_square_contents(coord, value)
     @board[coord[0]][coord[1]] = value

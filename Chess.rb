@@ -15,16 +15,18 @@ class Chess
     current_player = player1
 
     b.reset_pieces(player1, player2)
+    checkmate = false
 
-    until b.checkmate?(player1, player2)
+    until checkmate
       current_player.take_turn
       # p "Is there a check on blue? #{player1.in_check?}"
       # p "Is there a check on red? #{player2.in_check?}"
       current_player = swap_current_player(current_player, player1, player2)
-
+      checkmate = b.checkmate?(player1, player2)
+      puts "check" if current_player.in_check? && !checkmate
     end
 
-    puts "someone got checkmated"
+    puts "checkmate"
 
   end
 
