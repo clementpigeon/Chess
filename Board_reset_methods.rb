@@ -9,17 +9,39 @@ class Board
     reset_kings(player1, player2)
   end
 
-  def reset_pawns(player1, player2)
-    [player1, player2].each_with_index do |player, index|
-      8.times do |i|
-        row = index == 0 ? 6 : 1
-        col = i
+  def reset_piece_type(player1, player2, attr)
 
-        new_pawn = Pawn.new(self, player, [row, col])
-        self[row, col] = new_pawn
-        @pieces << new_pawn
+    [player1, player2].each_with_index do |player, index|
+      attr[:amount].times do |i|
+        p 'row: ', row = attr[:row_options][index]
+        p 'col: ', col = attr[:col_options][i]
+
+        new_piece = attr[:type].new(self, player, [row, col])
+        @board[row][col] = new_piece
+        @pieces << new_piece
       end
     end
+  end
+
+  def reset_pawns(player1, player2)
+    pawn_attributes = {
+      type: Pawn,
+      row_options: [6, 1],
+      col_options: (0..7).to_a,
+      amount: 8
+    }
+
+    reset_piece_type(player1, player2, pawn_attributes)
+    # [player1, player2].each_with_index do |player, index|
+#       8.times do |i|
+#         row = index == 0 ? 6 : 1
+#         col = i
+#
+#         new_pawn = Pawn.new(self, player, [row, col])
+#         self[row, col] = new_pawn
+#         @pieces << new_pawn
+#       end
+#     end
   end
 
   def reset_rooks(player1, player2)
