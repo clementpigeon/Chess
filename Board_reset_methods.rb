@@ -10,40 +10,29 @@ class Board
   end
 
   def reset_pawns(player1, player2)
-    players = [player1, player2]
-
-    players.each_with_index do |player, index|
-
-      (0..7).to_a.each do |i|
+    [player1, player2].each_with_index do |player, index|
+      8.times do |i|
         row = index == 0 ? 6 : 1
         col = i
+
         new_pawn = Pawn.new(self, player, [row, col])
         self[row, col] = new_pawn
         @pieces << new_pawn
       end
-
-      # (0..7).to_a.each do |i|
-      #   new_pawn = Pawn.new(self, player2, [1, i])
-      #   self[1, i] = new_pawn
-      #   @pieces << new_pawn
-      # end
     end
-
   end
 
   def reset_rooks(player1, player2)
-    new_pawn = Rook.new(self, player1, [7, 0])
-    self[7, 0] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Rook.new(self, player1, [7, 7])
-    self[7, 7] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Rook.new(self, player2, [0, 0])
-    self[0, 0] = new_pawn
-    @pieces << new_pawn
-    new_pawn = Rook.new(self, player2, [0, 7])
-    self[0, 7] = new_pawn
-    @pieces << new_pawn
+    [player1, player2].each_with_index do |player, index|
+      2.times do |i|
+        row = index == 0 ? 7 : 0
+        col = i == 0 ? 0 : 7
+
+        new_rook = Rook.new(self, player, [row, col])
+        self[row, col] = new_rook
+        @pieces << new_rook
+      end
+    end
   end
 
   def reset_bishops(player1, player2)
