@@ -39,32 +39,32 @@ class Board
   end
 
   def reset_bishops(player1, player2)
-    new_pawn = Bishop.new(self, player1, [7, 1])
-    self[7, 1] = new_pawn
+    new_pawn = Bishop.new(self, player1, [7, 2])
+    self[7, 2] = new_pawn
     @pieces << new_pawn
-    new_pawn = Bishop.new(self, player1, [7, 6])
-    self[7, 6] = new_pawn
+    new_pawn = Bishop.new(self, player1, [7, 5])
+    self[7, 5] = new_pawn
     @pieces << new_pawn
-    new_pawn = Bishop.new(self, player2, [0, 1])
-    self[0, 1] = new_pawn
+    new_pawn = Bishop.new(self, player2, [0, 2])
+    self[0, 2] = new_pawn
     @pieces << new_pawn
-    new_pawn = Bishop.new(self, player2, [0, 6])
-    self[0, 6] = new_pawn
+    new_pawn = Bishop.new(self, player2, [0, 5])
+    self[0, 5] = new_pawn
     @pieces << new_pawn
   end
 
   def reset_knights(player1, player2)
-    new_pawn = Knight.new(self, player1, [7, 2])
-    self[7, 2] = new_pawn
+    new_pawn = Knight.new(self, player1, [7, 1])
+    self[7, 1] = new_pawn
     @pieces << new_pawn
-    new_pawn = Knight.new(self, player1, [7, 5])
-    self[7, 5] = new_pawn
+    new_pawn = Knight.new(self, player1, [7, 6])
+    self[7, 6] = new_pawn
     @pieces << new_pawn
-    new_pawn = Knight.new(self, player2, [0, 2])
-    self[0, 2] = new_pawn
+    new_pawn = Knight.new(self, player2, [0, 1])
+    self[0, 1] = new_pawn
     @pieces << new_pawn
-    new_pawn = Knight.new(self, player2, [0, 5])
-    self[0, 5] = new_pawn
+    new_pawn = Knight.new(self, player2, [0, 6])
+    self[0, 6] = new_pawn
     @pieces << new_pawn
   end
 

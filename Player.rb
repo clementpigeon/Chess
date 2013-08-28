@@ -31,7 +31,11 @@ class Player
 
     moved_piece = move[0]
     destination = move[1]
-    if moved_piece.owner != self
+
+    if moved_piece.nil?
+      puts "No piece at that location. Try again"
+      take_turn
+    elsif moved_piece.owner != self
       puts "Can't move opponent piece. Try again"
       take_turn
     elsif not moved_piece.valid_move?(destination)

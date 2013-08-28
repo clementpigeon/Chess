@@ -27,6 +27,10 @@ class Piece
     destination_square && destination_square.owner == self.owner
   end
 
+  def valid_destinations
+    possible_destinations.select { |destination| valid_move? destination }
+  end
+
   def to_s
     PIECES_DISPLAY[self.class.to_s].colorize owner.color
   end

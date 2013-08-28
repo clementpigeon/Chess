@@ -31,51 +31,81 @@ class Board
     both_kings = @pieces.select { |piece| piece.is_a?(King) }
     player1_king = both_kings.select { |piece| piece.owner.color == :blue }[0]
     player2_king = both_kings.select { |piece| piece.owner.color == :red }[0]
+
     kings = [player1_king, player2_king]
-
-    # if player1_king.in_check?
-    #   escapes = player1_king.possible_destinations
-    #   escapes.select! do |escape|
-    #     player1_king.valid_move? escape
-    #   end
-    #
-    #   escapes.reject! do |escape|
-    #     original_location = player1_king.location
-    #
-    #     player1.make_move(player1_king, escape)
-    #     result = player1_king.in_check?
-    #
-    #     player1.make_move(player1_king, original_location)
-    #
-    #     result
-    #   end
-    #
-    #   return escapes.empty?
-    # end
-
 
     kings.each do |king|
       if king.in_check?
-        escapes = king.possible_destinations
-        escapes.select! do |escape|
-          king.valid_move? escape
-        end
-
-        escapes.reject! do |escape|
-          original_location = king.location
-
-          king.owner.make_move(king, escape)
-          result = king.in_check?
-
-          king.owner.make_move(king, original_location)
-
-          result
-        end
-
-        return escapes.empty? if escapes.empty?
+        return true unless rescueable?(king)
       end
     end
+    false
+  end
 
+  # def escapes(king)
+  #   escapes = king.possible_destinations
+  #   escapes.select! do |escape|
+  #     king.valid_move? escape
+  #   end
+  #
+  #   escapes.reject! do |escape|
+  #     original_location = king.location
+  #
+  #     if @board[escape[0]][escape[1]]
+  #       escape_content = @board[escape[0]][escape[1]].dup
+  #     end
+  #
+  #     king.owner.make_move(king, escape)
+  #     result = king.in_check?
+  #
+  #     king.owner.make_move(king, original_location)
+  #
+  #     if @board[escape[0]][escape[1]]
+  #       @board[escape[0]][escape[1]] = escape_content
+  #     end
+  #
+  #     result
+  #   end
+  #   escapes
+  # end
+
+  def rescues(king, piece)
+    rescues = piece.possible_destinations
+    rescues.select! do |rescue_move|
+      piece.valid_move? rescue_move
+    end
+
+    rescues.reject! do |rescue_move|
+      original_location = piece.location
+
+      if @board[rescue_move[0]][rescue_move[1]]
+        rescue_content = @board[rescue_move[0]][rescue_move[1]].dup
+      end
+
+      piece.owner.make_move(piece, rescue_move)
+      result = king.in_check?
+
+      piece.owner.make_move(piece, original_location)
+
+      if @board[rescue_move[0]][rescue_move[1]]
+        @board[rescue_move[0]][rescue_move[1]] = rescue_content
+      end
+
+      result
+    end
+
+    rescues
+  end
+
+  def rescueable?(king)
+    own_pieces = @pieces.select { |piece| king.owner == piece.owner }
+
+    own_pieces.each do |piece|
+      rescues = rescues(king, piece)
+    #  p "piece of type #{piece.class.to_s} saves by moving to #{rescues}"
+      return true unless rescues.empty?
+
+    end
 
     false
   end
