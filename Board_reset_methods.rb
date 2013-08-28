@@ -13,8 +13,8 @@ class Board
 
     [player1, player2].each_with_index do |player, index|
       attr[:amount].times do |i|
-        p 'row: ', row = attr[:row_options][index]
-        p 'col: ', col = attr[:col_options][i]
+        row = attr[:row_options][index]
+        col = attr[:col_options][i]
 
         new_piece = attr[:type].new(self, player, [row, col])
         @board[row][col] = new_piece
@@ -32,76 +32,60 @@ class Board
     }
 
     reset_piece_type(player1, player2, pawn_attributes)
-    # [player1, player2].each_with_index do |player, index|
-#       8.times do |i|
-#         row = index == 0 ? 6 : 1
-#         col = i
-#
-#         new_pawn = Pawn.new(self, player, [row, col])
-#         self[row, col] = new_pawn
-#         @pieces << new_pawn
-#       end
-#     end
   end
 
   def reset_rooks(player1, player2)
-    [player1, player2].each_with_index do |player, index|
-      2.times do |i|
-        row = index == 0 ? 7 : 0
-        col = i == 0 ? 0 : 7
+    rook_attributes = {
+      type: Rook,
+      row_options: [7, 0],
+      col_options: [0, 7],
+      amount: 2
+    }
 
-        new_rook = Rook.new(self, player, [row, col])
-        self[row, col] = new_rook
-        @pieces << new_rook
-      end
-    end
+    reset_piece_type(player1, player2, rook_attributes)
   end
 
   def reset_bishops(player1, player2)
-    [player1, player2].each_with_index do |player, index|
-      2.times do |i|
-        row = index == 0 ? 7 : 0
-        col = i == 0 ? 2 : 5
+    bishop_attributes = {
+      type: Bishop,
+      row_options: [7, 0],
+      col_options: [2, 5],
+      amount: 2
+    }
 
-        new_bishop = Bishop.new(self, player, [row, col])
-        self[row, col] = new_bishop
-        @pieces << new_bishop
-      end
-    end
+    reset_piece_type(player1, player2, bishop_attributes)
   end
 
   def reset_knights(player1, player2)
-    [player1, player2].each_with_index do |player, index|
-      2.times do |i|
-        row = index == 0 ? 7 : 0
-        col = i == 0 ? 1 : 6
+    knight_attributes = {
+      type: Knight,
+      row_options: [7, 0],
+      col_options: [1, 6],
+      amount: 2
+    }
 
-        new_knight = Knight.new(self, player, [row, col])
-        self[row, col] = new_knight
-        @pieces << new_knight
-      end
-    end
+    reset_piece_type(player1, player2, knight_attributes)
   end
 
   def reset_queens(player1, player2)
-    [player1, player2].each_with_index do |player, index|
-      row = index == 0 ? 7 : 0
-      col = 3
+    queen_attributes = {
+      type: Queen,
+      row_options: [7, 0],
+      col_options: [3],
+      amount: 1
+    }
 
-      new_queen = Queen.new(self, player, [row, col])
-      self[row, col] = new_queen
-      @pieces << new_queen
-    end
+    reset_piece_type(player1, player2, queen_attributes)
   end
 
   def reset_kings(player1, player2)
-    [player1, player2].each_with_index do |player, index|
-      row = index == 0 ? 7 : 0
-      col = 4
+    king_attributes = {
+      type: King,
+      row_options: [7, 0],
+      col_options: [4],
+      amount: 1
+    }
 
-      new_king = King.new(self, player, [row, col])
-      self[row, col] = new_king
-      @pieces << new_king
-    end
+    reset_piece_type(player1, player2, king_attributes)
   end
 end
