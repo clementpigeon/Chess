@@ -175,7 +175,7 @@ class King < Piece
   end
 
   def in_check?
-    opponent_pieces = @board.pieces_on_board[other_color]
+    opponent_pieces = @board.pieces.select { |piece| piece.owner.color == other_color }
    # puts "checking these pieces: #{opponent_pieces}"
     in_check = opponent_pieces.any? do |piece|
 

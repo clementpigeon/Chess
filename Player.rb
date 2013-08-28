@@ -50,5 +50,11 @@ class Player
     @board.set_square_contents(destination, moved_piece)
   end
 
+  def in_check?
+    both_kings = @board.pieces.select { |piece| piece.class == King }
+    my_king = both_kings.select { |king| king.owner.color == @color }[0]
+    my_king.in_check?
+  end
+
 
 end

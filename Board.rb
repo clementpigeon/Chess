@@ -2,30 +2,29 @@ require './board_reset_methods.rb'
 
 class Board
 
+  attr_accessor :pieces
+
   def initialize
     @board = empty_board
+    @pieces = []
   end
 
   def pieces_on_board
-    #returns a hash {red: [red pieces], blue: [blue pieces]}
-    blue_pieces = []
-    red_pieces = []
-    @board.each do |row|
-      row.each do |square|
-        unless square.nil?
-          blue_pieces << square if square.owner.color == :blue
-          red_pieces << square if square.owner.color == :red
-        end
-      end
-    end
-
-    result = {blue: blue_pieces, red: red_pieces}
-    result
-  end
-
-  def king(pieces)
-    result = pieces.select { |piece| piece.class.to_s == "King" }
-    result[0]
+    @pieces
+    # #returns a hash {red: [red pieces], blue: [blue pieces]}
+    # blue_pieces = []
+    # red_pieces = []
+    # @board.each do |row|
+    #   row.each do |square|
+    #     unless square.nil?
+    #       blue_pieces << square if square.owner.color == :blue
+    #       red_pieces << square if square.owner.color == :red
+    #     end
+    #   end
+    # end
+    #
+    # result = {blue: blue_pieces, red: red_pieces}
+    # result
   end
 
   def display

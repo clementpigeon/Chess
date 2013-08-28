@@ -18,8 +18,8 @@ class Chess
 
     until b.checkmate?
       current_player.take_turn
-      p "Is there a check on red? #{b.king(b.pieces_on_board[:red]).in_check?}"
-      p "Is there a check on blue? #{b.king(b.pieces_on_board[:blue]).in_check?}"
+      p "Is there a check on blue? #{player1.in_check?}"
+      p "Is there a check on red? #{player2.in_check?}"
       current_player = swap_current_player(current_player, player1, player2)
 
     end
