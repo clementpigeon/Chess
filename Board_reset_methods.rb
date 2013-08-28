@@ -1,12 +1,49 @@
 class Board
+  PIECE_ATTRIBUTES = {
+    pawn: {
+      type: :Pawn,
+      row_options: [6, 1],
+      col_options: (0..7).to_a,
+      amount: 8
+    },
+    rook: {
+      type: :Rook,
+      row_options: [7, 0],
+      col_options: [0, 7],
+      amount: 2
+    },
+    knight: {
+      type: :Knight,
+      row_options: [7, 0],
+      col_options: [1, 6],
+      amount: 2
+    },
+    bishop: {
+      type: :Bishop,
+      row_options: [7, 0],
+      col_options: [2, 5],
+      amount: 2
+    },
+    queen: {
+      type: :Queen,
+      row_options: [7, 0],
+      col_options: [3],
+      amount: 1
+    },
+    king: {
+      type: :King,
+      row_options: [7, 0],
+      col_options: [4],
+      amount: 1
+    }
+  }
+
   def reset_pieces(player1, player2)
     @board = empty_board
-    reset_pawns(player1, player2)
-    reset_rooks(player1, player2)
-    reset_bishops(player1, player2)
-    reset_knights(player1, player2)
-    reset_queens(player1, player2)
-    reset_kings(player1, player2)
+
+    PIECE_ATTRIBUTES.each_value do |attr_hash|
+      reset_piece_type(player1, player2, attr_hash)
+    end
   end
 
   def reset_piece_type(player1, player2, attr)
@@ -16,76 +53,13 @@ class Board
         row = attr[:row_options][index]
         col = attr[:col_options][i]
 
-        new_piece = attr[:type].new(self, player, [row, col])
+        # to turn a symbol into a class
+        this_class = Module.const_get(attr[:type])
+        new_piece = this_class.new(self, player, [row, col])
         @board[row][col] = new_piece
         @pieces << new_piece
       end
     end
   end
 
-  def reset_pawns(player1, player2)
-    pawn_attributes = {
-      type: Pawn,
-      row_options: [6, 1],
-      col_options: (0..7).to_a,
-      amount: 8
-    }
-
-    reset_piece_type(player1, player2, pawn_attributes)
-  end
-
-  def reset_rooks(player1, player2)
-    rook_attributes = {
-      type: Rook,
-      row_options: [7, 0],
-      col_options: [0, 7],
-      amount: 2
-    }
-
-    reset_piece_type(player1, player2, rook_attributes)
-  end
-
-  def reset_bishops(player1, player2)
-    bishop_attributes = {
-      type: Bishop,
-      row_options: [7, 0],
-      col_options: [2, 5],
-      amount: 2
-    }
-
-    reset_piece_type(player1, player2, bishop_attributes)
-  end
-
-  def reset_knights(player1, player2)
-    knight_attributes = {
-      type: Knight,
-      row_options: [7, 0],
-      col_options: [1, 6],
-      amount: 2
-    }
-
-    reset_piece_type(player1, player2, knight_attributes)
-  end
-
-  def reset_queens(player1, player2)
-    queen_attributes = {
-      type: Queen,
-      row_options: [7, 0],
-      col_options: [3],
-      amount: 1
-    }
-
-    reset_piece_type(player1, player2, queen_attributes)
-  end
-
-  def reset_kings(player1, player2)
-    king_attributes = {
-      type: King,
-      row_options: [7, 0],
-      col_options: [4],
-      amount: 1
-    }
-
-    reset_piece_type(player1, player2, king_attributes)
-  end
 end
