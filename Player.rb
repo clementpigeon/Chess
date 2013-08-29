@@ -1,3 +1,5 @@
+COMPUTER_PLAYER = false
+
 class Player
   attr_accessor :board, :color
 
@@ -6,8 +8,17 @@ class Player
   end
 
   def get_user_input
-    print "Enter move: ".colorize (@color)
-    input = gets.chomp
+    if !COMPUTER_PLAYER
+      print "Enter move: ".colorize (@color)
+      input = gets.chomp
+    else
+      letter1 = ('a'..'h').to_a.sample
+      letter2 = ('a'..'h').to_a.sample
+      number1 = ('1'..'8').to_a.sample
+      number2 = ('1'..'8').to_a.sample
+
+      letter1 + number1 + ' ' + letter2 + number2
+    end
   end
 
   def parse_input(input)
@@ -26,22 +37,25 @@ class Player
 
   def take_turn
     # use get_move to get the to and from coords such as [f8, g7]
-    @board.display
     move = parse_input(get_user_input)
 
     moved_piece = move[0]
     destination = move[1]
 
     if moved_piece.nil?
-      puts "No piece at that location. Try again"
-      take_turn
+      puts "No piece at that location. Try again" unless COMPUTER_PLAYER
+      return take_turn
     elsif moved_piece.owner != self
-      puts "Can't move opponent piece. Try again"
-      take_turn
-    elsif not moved_piece.valid_move?(destination)
-      puts "Invalid move. Try again"
-      take_turn
+      puts "Can't move opponent piece. Try again" unless COMPUTER_PLAYER
+      return take_turn
+    elsif not moved_piece.valid_destinations.include?(destination)
+      puts "Invalid move. Try again" unless COMPUTER_PLAYER
+      return take_turn
+    elsif moved_piece.moving_into_check?(destination)
+      puts "Can't move into check"
+      return take_turn
     else
+      puts "grats on moving #{moved_piece.class} to #{destination}"
       make_move(moved_piece, destination)
     end
   end
@@ -51,7 +65,11 @@ class Player
 
     moved_piece.location = destination
 
+    destination_square_content = @board.get_square_contents(destination)
+    destination_square_content.location = nil if destination_square_content
+
     @board.set_square_contents(destination, moved_piece)
+
   end
 
   def in_check?

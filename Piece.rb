@@ -16,15 +16,21 @@ class Piece
   end
 
   def valid_move?(destination)
-    return false unless destination.all? { |coord| coord.between?(0,7) }
+    return false if not is_on_board?(destination)
     return false if destination_same_owner? destination
-    return false unless possible_destinations.include? destination
-    return false if moving_into_check? destination
+   # return false if moving_into_check? destination
     true
   end
 
+  def valid_destinations
+    possible_destinations.select do |destination|
+   #   puts "checking validity of moving #{self.class} at #{@location} to #{destination}"
+      valid_move? destination
+    end
+  end
+
   def moving_into_check?(destination)
-    original_location = @location
+    original_location = @location.dup
 
     if @board[destination[0], destination[1]]
       destination_content = @board[destination[0], destination[1]].dup
@@ -41,15 +47,12 @@ class Piece
     end
 
     result
+    false
   end
 
   def destination_same_owner?(destination)
     destination_square = @board.get_square_contents(destination)
     destination_square && destination_square.owner == self.owner
-  end
-
-  def valid_destinations
-    possible_destinations.select { |destination| valid_move? destination }
   end
 
   def to_s
@@ -61,7 +64,7 @@ class Piece
     directions.each do |direction|
       i = 0
       free = true
-      current_location = self.location.dup
+      current_location = self.location.dup if @location
 
       while free == true
         current_location[0] += direction[0]
@@ -74,6 +77,7 @@ class Piece
         end
       end
     end
+
     result
   end
 
@@ -94,65 +98,128 @@ class Piece
       [0, -1],
       [0, 1]
     ]
+
     iterate_destinations(directions)
   end
 
+  def is_on_board?(square)
+    square.all? { |coord| coord.between?(0,7) }
+  end
+
+  def other_color
+    if @owner.color == :red
+      return :blue
+    else
+      return :red
+    end
+  end
 end
 
 class Pawn < Piece
   def possible_destinations
+    return [] unless @location
+
     result = []
-    diagonals = [
+
+    row = @location[0]
+    col = @location[1]
+
+    result << [row - 1, col ] if @owner.color == :blue
+    result << [row + 1, col ] if @owner.color == :red
+
+    result << [row - 2, col ] if @owner.color == :blue && @location[0] == 6
+    result << [row + 2, col ] if @owner.color == :red && @location[0] == 1
+
+    result.reject! do |destination|
+      square_occuppied_by_other_color?(destination)
+    end
+
+    blue_diagonals = [     # player 1 = blue goes up
       [-1, -1],
-      [-1, 1],
+      [-1, 1]
+      ]
+
+    red_diagonals = [      # player 2 = red goes down
       [1, -1],
       [1, 1]
     ]
 
-    diagonals.map! do |move|
-      [move[0] + @location[0], move[1] + @location[1]]
+    blue_diagonals.each do |move|
+      destination = [ move[0] + @location[0], move[1] + @location[1] ]
+      if square_occuppied_by_other_color?(destination)
+        result << destination
+      end
     end
 
-    if @owner.color == :blue # player 1 pawn only goes up
-      next_square = @board.get_square_contents([@location[0] - 1, @location[1]])
-      result << [@location[0] - 1, @location[1]] if next_square.nil?
-      diagonals = diagonals[0..1]
-    else # player 2 pawn only goes down
-      next_square = @board.get_square_contents([@location[0] + 1, @location[1]])
-      result << [@location[0] + 1, @location[1]] if next_square.nil?
-      diagonals = diagonals[2..3]
+    red_diagonals.each do |move|
+      destination = [ move[0] + @location[0], move[1] + @location[1] ]
+      if square_occuppied_by_other_color?(destination)
+        result << destination
+      end
     end
 
-    if @owner.color == :blue && @location[0] == 6  # player 1 pawn only goes up
-      next_square = @board.get_square_contents([@location[0] - 2, @location[1]])
-      result << [@location[0] - 2, @location[1]] if next_square.nil?
-      diagonals = diagonals[0..1]
-    elsif @location[0] == 1 # player 2 pawn only goes down
-      next_square = @board.get_square_contents([@location[0] + 2, @location[1]])
-      result << [@location[0] + 2, @location[1]] if next_square.nil?
-      diagonals = diagonals[2..3]
-    end
+    result
 
-    diagonals.select! do |destination|
-      destination_contents = @board.get_square_contents(destination)
 
-      destination_contents && destination_contents.owner != @owner
-    end
 
-    result += diagonals
+    # diagonals.map! do |move|
+   #    [move[0] + @location[0], move[1] + @location[1]]
+   #  end
+   #
+   #  if @owner.color == :blue # player 1 pawn only goes up
+   #    next_square = @board.get_square_contents([@location[0] - 1, @location[1]])
+   #    result << [@location[0] - 1, @location[1]] if next_square.nil?
+   #    diagonals = diagonals[0..1]
+   #  else # player 2 pawn only goes down
+   #    next_square = @board.get_square_contents([@location[0] + 1, @location[1]])
+   #    result << [@location[0] + 1, @location[1]] if next_square.nil?
+   #    diagonals = diagonals[2..3]
+   #  end
 
+
+
+#
+#     if @owner.color == :blue && @location[0] == 6  # player 1 pawn only goes up
+#       next_square = @board.get_square_contents([@location[0] - 2, @location[1]])
+#       result << [@location[0] - 2, @location[1]] if next_square.nil?
+#       diagonals = diagonals[0..1]
+#     elsif @location[0] == 1 # player 2 pawn only goes down
+#       next_square = @board.get_square_contents([@location[0] + 2, @location[1]])
+#       result << [@location[0] + 2, @location[1]] if next_square.nil?
+#       diagonals = diagonals[2..3]
+#     end
+#
+#     diagonals.select! do |destination|
+#       destination_contents = @board.get_square_contents(destination)
+#
+#       destination_contents && destination_contents.owner != @owner
+#     end
+#
+#     result += diagonals
+
+  end
+
+  def square_occuppied_by_other_color?(square)
+    return false if not is_on_board?(square)
+    return false if not @board.get_square_contents(square)
+    return false if not @board.get_square_contents(square).owner.color == self.other_color
+    true
   end
 
 end
 
 class Rook < Piece
   def possible_destinations
+    return [] unless @location
+
     vertical_destinations
   end
 end
 
 class Knight < Piece
   def possible_destinations
+    return [] unless @location
+
     moves = [
       [-2, -1],
       [-1, -2],
@@ -164,26 +231,33 @@ class Knight < Piece
       [-2, 1]
     ]
 
-    moves.map do |move|
+    moves.map! do |move|
       [move[0] + @location[0], move[1] + @location[1]]
     end
+   # moves.select! { |destination| valid_move? destination }
   end
 end
 
 class Bishop < Piece
   def possible_destinations
+    return [] unless @location
+
     diagonal_destinations
   end
 end
 
 class Queen < Piece
   def possible_destinations
+    return [] unless @location
+
     vertical_destinations + diagonal_destinations
   end
 end
 
 class King < Piece
   def possible_destinations
+    return [] unless @location
+
     moves = [
       [-1, -1],
       [-1, 0],
@@ -201,23 +275,17 @@ class King < Piece
   end
 
   def in_check?
-    opponent_pieces = @board.pieces.select { |piece| piece.owner.color == other_color }
+    opponent_pieces = @board.pieces.select do |piece|
+      piece.owner.color == other_color && piece.location
+    end
+    opponent_pieces.reject! { |piece| piece.is_a?(King) }
     in_check = opponent_pieces.any? do |piece|
       threatens_me? piece
     end
   end
 
-  def other_color
-    if @owner.color == :red
-      return :blue
-    else
-      return :red
-    end
-  end
-
   def threatens_me?(piece)
-    if piece.possible_destinations.include? @location
- #     p "threatened by #{piece.class.to_s} of color #{piece.owner.color.to_s}"
+    if piece.valid_destinations.include? @location
       true
     end
   end

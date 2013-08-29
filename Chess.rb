@@ -2,35 +2,42 @@ require './Board.rb'
 require './Piece.rb'
 require './Player.rb'
 require 'colorize'
+require 'debugger'
 
 class Chess
 
   def run
-    b = Board.new
+    board = Board.new
 
     # player 1 is blue, down, and starting
-    player1 = Player.new(b, :blue)
-    player2 = Player.new(b, :red)
+    @player1 = Player.new(board, :blue)
+    @player2 = Player.new(board, :red)
 
-    current_player = player1
+    current_player = @player1
 
-    b.reset_pieces(player1, player2)
+    board.reset_pieces(@player1, @player2)
     checkmate = false
 
     until checkmate
-      current_player.take_turn
-      current_player = swap_current_player(current_player, player1, player2)
-      checkmate = b.checkmate?(player1, player2)
-      puts "check" if current_player.in_check? && !checkmate
-    end
+      puts "new turn! current player is #{current_player.color}, the current board: "
+      board.display
 
+      current_player.take_turn
+
+      if other_player(current_player).in_check?
+        puts "check - checking to see if checkmate..."
+        checkmate = board.checkmate?(other_player(current_player))
+        puts "check" unless checkmate
+      end
+      current_player = other_player(current_player) unless checkmate
+    end
     puts "checkmate"
+    board.display
 
   end
 
-  def swap_current_player(current_player, player1, player2)
-    return player1 if current_player == player2
-    player2
+  def other_player(player)
+    player == @player1 ? @player2 : @player1
   end
 
 end
